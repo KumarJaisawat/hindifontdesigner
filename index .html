@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hindi Font Generator</title>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9698100648606421" crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@700&family=Yatra+One&family=Kalam:wght@700&family=Teko:wght@500&family=Rozha+One&family=Kurale&family=Akshar:wght@700&family=Modak&family=Gajraj+One&family=Ranga:wght@700&family=Tillana:wght@700&family=Laila:wght@700&family=Biryani:wght@800&family=Inknut+Antiqua:wght@700&family=Gotu&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --gold: #FFD966; --bg: #0A0310; --purple: #1F0A38; --card: #160729; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; font-family: 'Mukta', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* Ad Slot */
+        .ad-top { width: 100%; height: 60px; background: #000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid #333; flex-shrink: 0; overflow: hidden; }
+
+        .header { background: var(--purple); padding: 12px; text-align: center; border-bottom: 2px solid var(--gold); flex-shrink: 0; }
+        .header h1 { font-size: 1rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2.5px; }
+
+        .workspace { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 15px; scrollbar-width: none; }
+        .workspace::-webkit-scrollbar { display: none; }
+
+        /* Canvas Frame Calculation */
+        .canvas-frame { 
+            width: 90vw; max-width: 380px; aspect-ratio: 1/1; 
+            background: #000; border: 4.5px solid var(--gold); border-radius: 16px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9); margin-bottom: 20px; flex-shrink: 0;
+            overflow: hidden; position: relative; line-height: 0;
+        }
+
+        .tool-box { width: 100%; max-width: 400px; padding-bottom: 30px; }
+        textarea { width: 100%; height: 55px; background: var(--card); border: 2px solid var(--gold); border-radius: 12px; color: #fff; font-size: 18px; padding: 12px; margin-bottom: 15px; outline: none; border-left: 6px solid var(--gold); resize: none; }
+
+        .control-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid rgba(255, 217, 102, 0.2); margin-bottom: 15px; }
+        .s-label { font-size: 10px; color: var(--gold); display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 900; }
+        input[type=range] { width: 100%; accent-color: var(--gold); height: 4px; margin-bottom: 12px; cursor: pointer; }
+
+        .label { font-size: 11px; color: var(--gold); text-transform: uppercase; font-weight: 900; margin: 10px 0 8px; letter-spacing: 1px; }
+        .h-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 5px 0; scrollbar-width: none; margin-bottom: 10px; }
+        .h-scroll::-webkit-scrollbar { display: none; }
+        
+        .circle { width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid #fff; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.5); cursor: pointer; }
+        .pill { background: var(--purple); padding: 10px 25px; border-radius: 30px; border: 1.8px solid var(--gold); white-space: nowrap; font-size: 16px; color: #fff; cursor: pointer; }
+
+        .btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+        .btn-action { padding: 15px; border-radius: 12px; border: none; font-weight: 900; font-size: 10px; color: #fff; text-transform: uppercase; cursor: pointer; }
+        .bg-gold { background: var(--gold); color: #000; }
+        .bg-blue { background: #3498db; }
+        .bg-red { background: #ff4444; }
+
+        .bottom-cta { padding: 15px; background: var(--bg); border-top: 1px solid #222; flex-shrink: 0; }
+        .save-btn { width: 100%; padding: 18px; border-radius: 40px; background: linear-gradient(135deg, #FFD966, #B87333); color: #000; font-weight: 900; font-size: 17px; border: 2.5px solid #fff; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="ad-top">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+         data-ad-client="ca-pub-9698100648606421"
+         data-ad-slot="8032700239"></ins>
+    <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
+</div>
+
+<div class="header"><h1>Hindi Font Generator</h1></div>
+
+<div class="workspace">
+    <div class="canvas-frame"><canvas id="mainEditor"></canvas></div>
+
+    <div class="tool-box">
+        <textarea id="mainInput" placeholder="  ..."> </textarea>
+        
+        <div class="control-card">
+            <div class="s-label"><span>Background Blur</span> <span id="valB">0</span></div>
+            <input type="range" min="0" max="25" value="0" id="slideB">
+            
+            <div class="s-label"><span>Text Glow</span> <span id="valG">0</span></div>
+            <input type="range" min="0" max="50" value="0" id="slideG">
+        </div>
+
+        <p class="label">Text Color</p>
+        <div class="h-scroll" id="tColors"></div>
+
+        <p class="label">Canvas Background</p>
+        <div class="h-scroll" id="bColors"></div>
+
+        <div class="btn-grid">
+            <button onclick="addText()" class="btn-action bg-gold">Add Text</button>
+            <button onclick="document.getElementById('fileIn').click()" class="btn-action bg-blue">Gallery</button>
+            <button onclick="deleteSelected()" class="btn-action bg-red">Delete</button>
+            <input type="file" id="fileIn" style="display:none" accept="image/*">
+        </div>
+
+        <p class="label">Stylish Fonts</p>
+        <div class="h-scroll" id="fontList"></div>
+    </div>
+</div>
+
+<div class="bottom-cta">
+    <button onclick="saveFinal()" class="save-btn">    </button>
+</div>
+
+<script>
+    let canvas;
+    const fonts = ['Mukta', 'Yatra One', 'Kalam', 'Teko', 'Rozha One', 'Kurale', 'Akshar', 'Modak', 'Gajraj One', 'Ranga', 'Tillana', 'Laila', 'Biryani', 'Inknut Antiqua', 'Gotu'];
+    const colors = ['#FFD966', '#FFFFFF', '#FF4444', '#00FBFF', '#FF00FF', '#00FF00', '#FFFF00', '#000000', '#555555'];
+
+    window.onload = function() {
+        const frame = document.querySelector('.canvas-frame');
+        const size = frame.clientWidth; 
+        canvas = new fabric.Canvas('mainEditor', { 
+            width: size, 
+            height: size, 
+            backgroundColor: '#000',
+            preserveObjectStacking: true 
+        });
+
+        setupUI();
+        
+        // Use IText for editing capability
+        let t = new fabric.IText(" ", { 
+            left: size/2, top: size/2, 
+            originX:'center', originY:'center', 
+            fill: '#FFD966', fontSize: 45, 
+            fontFamily: 'Mukta' 
+        });
+        canvas.add(t).setActiveObject(t);
+
+        // SYNC TEXT BOX WITH CANVAS (LIVE UPDATE)
+        document.getElementById('mainInput').oninput = function() {
+            let activeObj = canvas.getActiveObject(); 
+            if(activeObj && activeObj.type.includes('text')){ 
+                activeObj.set('text', this.value); 
+                canvas.renderAll(); 
+            }
+        };
+
+        // Selection Listener: Updates the textarea when an object is clicked on canvas
+        canvas.on('selection:created', (e) => { document.getElementById('mainInput').value = e.selected[0].text; });
+        canvas.on('selection:updated', (e) => { document.getElementById('mainInput').value = e.selected[0].text; });
+
+        document.getElementById('slideB').oninput = function() {
+            document.getElementById('valB').innerText = this.value;
+            let bg = canvas.backgroundImage; 
+            if(bg){ 
+                bg.filters = [new fabric.Image.filters.Blur({ blur: this.value/15 })]; 
+                bg.applyFilters(); 
+                canvas.requestRenderAll(); 
+            }
+        };
+
+        document.getElementById('slideG').oninput = function() {
+            document.getElementById('valG').innerText = this.value;
+            let a = canvas.getActiveObject(); 
+            if(a && a.type.includes('text')){ 
+                a.set('shadow', new fabric.Shadow({ color: a.fill, blur: parseInt(this.value), offsetX: 0, offsetY: 0 })); 
+                canvas.requestRenderAll(); 
+            }
+        };
+
+        document.getElementById('fileIn').onchange = (e) => {
+            let reader = new FileReader(); 
+            reader.onload = (f) => { 
+                fabric.Image.fromURL(f.target.result, (img) => { 
+                    img.scaleToWidth(canvas.width); 
+                    canvas.setBackgroundImage(img, canvas.requestRenderAll.bind(canvas)); 
+                }); 
+            }; 
+            reader.readAsDataURL(e.target.files[0]);
+        };
+    };
+
+    function setupUI() {
+        const tBox = document.getElementById('tColors'), bBox = document.getElementById('bColors'), fBox = document.getElementById('fontList');
+        colors.forEach(c => {
+            let d1 = document.createElement('div'); d1.className='circle'; d1.style.background=c;
+            d1.onclick=()=>{ let a=canvas.getActiveObject(); if(a){ a.set('fill',c); canvas.requestRenderAll(); } }; tBox.appendChild(d1);
+            
+            let d2 = document.createElement('div'); d2.className='circle'; d2.style.background=c;
+            d2.onclick=()=>{ 
+                canvas.setBackgroundImage(null, canvas.renderAll.bind(canvas));
+                canvas.setBackgroundColor(c, canvas.renderAll.bind(canvas)); 
+            }; bBox.appendChild(d2);
+        });
+        fonts.forEach(f => {
+            let p = document.createElement('div'); p.className='pill'; p.style.fontFamily=f; p.innerText=f;
+            p.onclick=()=>{ 
+                let a=canvas.getActiveObject(); 
+                if(a){ a.set('fontFamily', f); canvas.requestRenderAll(); } 
+            }; fBox.appendChild(p);
+        });
+    }
+
+    function addText() { 
+        let t = new fabric.IText(" ", { 
+            left: canvas.width/2, top: canvas.height/2, 
+            originX:'center', originY:'center',
+            fill: '#fff', fontSize: 35, fontFamily: 'Mukta' 
+        }); 
+        canvas.add(t).setActiveObject(t); 
+        document.getElementById('mainInput').value = " ";
+        canvas.requestRenderAll();
+    }
+    
+    function deleteSelected() { 
+        let a = canvas.getActiveObject(); 
+        if(a){ canvas.remove(a); canvas.discardActiveObject(); canvas.requestRenderAll(); } 
+    }
+    
+    function saveFinal() {
+        const data = canvas.toDataURL({ format: 'png', multiplier: 3 });
+        const link = document.createElement('a'); link.download = 'HindiDesign_HD.png'; link.href = data; link.click();
+        
+        // Ad Hook
+        if(window.Android && window.Android.showInterstitial) {
+             window.Android.showInterstitial();
+        }
+    }
+</script>
+</body>
+</html>
