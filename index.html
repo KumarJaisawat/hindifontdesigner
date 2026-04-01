@@ -3,238 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hindi Font Designer Pro</title>
+    <title>Hindi Font Designer</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9698100648606421" crossorigin="anonymous"></script>
+    
     <script src="https://unpkg.com/fabric@5.3.0/dist/fabric.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@800&family=Modak&family=Gajraj+One&family=Yatra+One&family=Teko:wght@600&family=Kalam:wght@700&family=Rozha+One&family=Ranga:wght@700&family=Kurale&family=Akshar:wght@700&family=Tillana:wght@800&family=Laila:wght@700&family=Biryani:wght@900&family=Inknut+Antiqua:wght@800&family=Gotu&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@800&family=Modak&family=Gajraj+One&family=Yatra+One&family=Teko:wght@600&family=Kalam:wght@700&family=Rozha+One&family=Ranga:wght@700&family=Kurale&family=Akshar:wght@700&family=Tillana:wght@800&family=Laila:wght@700&family=Biryani:wght@900&family=Inknut+Antiqua:wght@800&family=Gotu&family=Martel:wght@900&family=Karma:wght@700&family=Hind:wght@700&family=Amita:wght@700&family=Eczar:wght@800&family=Palanquin+Dark:wght@700&family=Rhodium+Libre&family=Sahitya:wght@700&family=Sura:wght@700&family=Vesper+Libre:wght@900&display=swap" rel="stylesheet">
 
-    <style>
-        :root { 
-            --gold: #FFD966; 
-            --metallic-purple: #4b0082; 
-            --metallic-black: #0d0d0d;
-            --purple-glow: rgba(138, 43, 226, 0.6);
-        }
+<style>
+:root { --purp: #8a2be2; --gold: #FFD700; --card: #160729; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { background: #000; color: #fff; font-family: 'Mukta', sans-serif; height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
+.header { background: #000; padding: 12px; text-align: center; border-bottom: 2px solid var(--purp); position: sticky; top: 0; z-index: 100; }
+.header h1 { font-size: 16px; color: #d8b4fe; letter-spacing: 1px; font-weight: 900; }
+.workspace { padding: 15px; display: flex; flex-direction: column; align-items: center; min-height: 100%; }
+.workbox { width: 100%; max-width: 350px; background: #111; border: 4px solid #4b0082; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 0 20px var(--purp); position: relative; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* आपके ओरिजिनल टूल्स स्टाइल */
+.tool-card { width: 100%; max-width: 380px; background: var(--card); border-radius: 15px; padding: 12px; margin-bottom: 10px; border: 1px solid #333; }
+.label { font-size: 11px; color: var(--gold); font-weight: 800; margin-bottom: 8px; display: block; text-transform: uppercase; }
+select, .btn-action, .color-input { width: 100%; background: #222; color: #fff; border: 1px solid var(--purp); padding: 12px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-bottom: 8px; }
+.btn-action { background: linear-gradient(145deg, #8a2be2, #4b0082); border: none; }
+.color-grid { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.color-input { padding: 2px; height: 45px; cursor: pointer; background: transparent; border: none; }
+.h-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+.font-pill { background: #2a0a4d; padding: 10px 20px; border-radius: 30px; border: 1px solid var(--purp); color: #fff; white-space: nowrap; font-size: 16px; cursor: pointer; }
 
-        body {
-            background: linear-gradient(180deg, #000 0%, #1a0533 100%);
-            color: #fff; font-family: 'Mukta', sans-serif;
-            height: 100vh; display: flex; flex-direction: column; overflow: hidden;
-        }
-
-        .ad-top { width: 100%; height: 50px; background: #000; border-bottom: 1px solid #222; flex-shrink: 0; }
-
-        .header { 
-            background: linear-gradient(90deg, #000, #2e0854, #000); 
-            padding: 10px; text-align: center; border-bottom: 2px solid var(--metallic-purple); flex-shrink: 0;
-        }
-        .header h1 { font-size: 15px; color: #d8b4fe; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
-
-        .workspace {
-            flex: 1; overflow-y: auto; padding: 15px;
-            display: flex; flex-direction: column; align-items: center; scrollbar-width: none;
-        }
-        .workspace::-webkit-scrollbar { display: none; }
-
-        /* Metallic Purple Canvas Border */
-        .canvas-frame {
-            width: 100%; max-width: 350px; aspect-ratio: 1/1;
-            background: #000; 
-            border: 4px solid var(--metallic-purple); 
-            border-radius: 12px;
-            box-shadow: 0 0 25px var(--purple-glow); 
-            margin-bottom: 20px; overflow: hidden; flex-shrink: 0;
-        }
-
-        .tool-card {
-            width: 100%; max-width: 380px; 
-            background: linear-gradient(145deg, #160729, #0d0d0d); 
-            border-radius: 15px; padding: 15px; margin-bottom: 12px; 
-            border: 1px solid rgba(138, 43, 226, 0.3);
-        }
-        .label { font-size: 10px; color: #d8b4fe; text-transform: uppercase; font-weight: 900; margin-bottom: 10px; display: block; }
-
-        .h-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
-        .h-scroll::-webkit-scrollbar { display: none; }
-
-        .color-dot { min-width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); cursor: pointer; flex-shrink: 0; }
-        .font-pill { 
-            background: #2a0a4d; padding: 10px 22px; border-radius: 25px; 
-            border: 1px solid var(--metallic-purple); white-space: nowrap; font-size: 16px; 
-            color: #fff; cursor: pointer;
-        }
-
-        .slider-row { margin-bottom: 10px; }
-        .slider-info { display: flex; justify-content: space-between; font-size: 11px; color: #aaa; margin-bottom: 4px; }
-        input[type=range] { width: 100%; accent-color: var(--metallic-purple); cursor: pointer; }
-
-        .action-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 380px; margin-bottom: 20px; }
-        .btn-ui { padding: 14px; border-radius: 10px; border: none; font-weight: 900; font-size: 11px; text-transform: uppercase; cursor: pointer; color: #fff; }
-        .bg-purp { background: var(--metallic-purple); }
-        .bg-blue { background: #2980b9; }
-        .bg-red { background: #c0392b; }
-
-        .footer { padding: 12px; background: #000; border-top: 1px solid #333; text-align: center; }
-        .btn-save { 
-            width: 160px; padding: 12px; border-radius: 30px; 
-            background: linear-gradient(135deg, #8a2be2, #4b0082); 
-            color: #fff; font-weight: 900; font-size: 14px; border: none;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
-        }
-    </style>
+/* फिक्स्ड डाउनलोड बटन */
+.footer { padding: 20px; background: #000; text-align: center; border-top: 1px solid #222; }
+.new-dl-btn {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 18px 40px;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+}
+</style>
 </head>
+
 <body>
 
-    <div class="ad-top">
-        <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-9698100648606421" data-ad-slot="8032700239"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
+<div class="header"><h1>HINDI FONT DESIGNER</h1></div>
 
-    <div class="header"><h1>Hindi Font Designer</h1></div>
+<div class="workspace">
+    <div class="workbox" id="cParent"><canvas id="mainC"></canvas></div>
 
-    <div class="workspace">
-        <div class="canvas-frame"><canvas id="mainC"></canvas></div>
-
-        <div class="action-row">
-            <button class="btn-ui bg-purp" onclick="addT()">+ Text</button>
-            <button class="btn-ui bg-blue" onclick="document.getElementById('f').click()">🖼 Photo</button>
-            <button class="btn-ui bg-red" onclick="del()">🗑 Delete</button>
-            <input type="file" id="f" hidden accept="image/*">
-        </div>
-
-        <div class="tool-card">
-            <span class="label">क्रांतिकारी Effects</span>
-            <div class="slider-row">
-                <div class="slider-info"><span>Text Glow</span> <b id="valG">0</b></div>
-                <input type="range" id="rangeG" min="0" max="60" value="0">
-            </div>
-            <div class="slider-row">
-                <div class="slider-info"><span>Bg Blur (Photo Only)</span> <b id="valB">0</b></div>
-                <input type="range" id="rangeB" min="0" max="40" value="0">
-            </div>
-        </div>
-
-        <div class="tool-card">
-            <span class="label">क्रांतिकारी हिंदी फोंट्स</span>
-            <div id="fontBox" class="h-scroll"></div>
-        </div>
-
-        <div class="tool-card">
-            <span class="label">Text Colors (अक्षर का रंग)</span>
-            <div id="textColBox" class="h-scroll"></div>
-        </div>
-
-        <div class="tool-card">
-            <span class="label">Canvas Colors (बैकग्राउंड रंग)</span>
-            <div id="bgColBox" class="h-scroll"></div>
+    <div class="tool-card">
+        <span class="label">Step 1: Canvas & Background</span>
+        <select onchange="updateCanvasSize(this.value)">
+            <option value="1:1">📏 Size: Square (1:1)</option>
+            <option value="16:9">📏 Size: Youtube (16:9)</option>
+            <option value="9:16">📏 Size: Story (9:16)</option>
+        </select>
+        <div class="color-grid">
+            <select style="flex:1; margin-bottom:0;" onchange="changeBg(this.value)">
+                <option value="#111">🎨 Black</option>
+                <option value="#ffffff">🎨 White</option>
+                <option value="#ff4500">🎨 Orange Red</option>
+            </select>
+            <input type="color" class="color-input" style="flex:0.3;" onchange="changeBg(this.value)">
         </div>
     </div>
 
-    <div class="footer">
-        <button class="btn-save" onclick="save()">Save Design 💾</button>
+    <div class="tool-card">
+        <span class="label">Step 2: Content & Text Color</span>
+        <div style="display: flex; gap: 8px;">
+            <button class="btn-action" style="flex:1" onclick="addText()">+ Text</button>
+            <button class="btn-action" style="flex:1; background:#2980b9" onclick="document.getElementById('f').click()">+ Photo</button>
+            <button class="btn-action" style="flex:0.4; background:#c0392b" onclick="deleteObj()">🗑</button>
+        </div>
+        <input type="file" id="f" hidden accept="image/*">
+        <div class="color-grid" style="margin-top:10px;">
+            <select style="flex:1; margin-bottom:0;" onchange="changeTextColor(this.value)">
+                <option value="#FFD966">✏️ Gold</option>
+                <option value="#FFFFFF">✏️ White</option>
+            </select>
+            <input type="color" class="color-input" style="flex:0.3;" onchange="changeTextColor(this.value)">
+        </div>
     </div>
 
-    <script>
-        let canvas;
-        const fonts = ['Mukta', 'Modak', 'Gajraj One', 'Yatra One', 'Teko', 'Kalam', 'Rozha One', 'Ranga', 'Kurale', 'Akshar', 'Tillana', 'Laila', 'Biryani', 'Inknut Antiqua', 'Gotu'];
-        const colorPalette = ['#FFD966', '#FFFFFF', '#FF4444', '#00FBFF', '#FF00FF', '#39FF14', '#000000', '#FF8C00', '#8a2be2', '#2ecc71', '#34495e'];
+    <div class="tool-card">
+        <span class="label">Step 3: Effects & Blur</span>
+        <select onchange="applyFX(this.value)">
+            <option value="none">✨ Select Effect</option>
+            <option value="glow">🔥 Neon Glow</option>
+            <option value="shadow">🌑 3D Shadow</option>
+        </select>
+        <div style="margin-top:10px;">
+            <span class="label" style="color:#bbb; font-size:9px;">Photo Blur</span>
+            <input type="range" min="0" max="100" value="0" style="width:100%;" oninput="applyBlur(this.value)">
+        </div>
+    </div>
 
-        window.onload = function() {
-            const frame = document.querySelector('.canvas-frame');
-            canvas = new fabric.Canvas('mainC', {
-                width: frame.clientWidth, height: frame.clientWidth,
-                backgroundColor: '#000', preserveObjectStacking: true
+    <div class="tool-card">
+        <span class="label">Hindi Stylish Fonts 🔥</span>
+        <div class="h-scroll" id="fontBox"></div>
+    </div>
+</div>
+
+<div class="footer">
+    <button class="new-dl-btn" onclick="professionalDownload()">DOWNLOAD FILE 📁</button>
+</div>
+
+<script>
+let canvas;
+// आपके पूरे 25 फोंट्स
+const stylish = ['Mukta','Modak','Gajraj One','Yatra One','Teko','Kalam','Rozha One','Ranga','Kurale','Akshar','Tillana','Laila','Biryani','Inknut Antiqua','Gotu','Martel','Karma','Hind','Amita','Eczar','Palanquin Dark','Rhodium Libre','Sahitya','Sura','Vesper Libre'];
+
+window.onload=function(){
+    const p=document.getElementById('cParent');
+    canvas=new fabric.Canvas('mainC',{width:p.clientWidth,height:p.clientWidth,backgroundColor:'#111',preserveObjectStacking:true});
+    initFonts();
+    addText("डिज़ाइन");
+    
+    document.getElementById('f').onchange=(e)=>{
+        let r=new FileReader();
+        r.onload=(ev)=>{
+            fabric.Image.fromURL(ev.target.result,(img)=>{
+                img.scaleToWidth(canvas.width);
+                canvas.add(img).centerObject(img).setActiveObject(img);
+                img.sendToBack();canvas.renderAll();
             });
-
-            fabric.Object.prototype.set({
-                transparentCorners: false, cornerColor: '#8a2be2', cornerSize: 12, cornerStyle: 'circle', borderColor: '#8a2be2'
-            });
-
-            // Glow Logic
-            document.getElementById('rangeG').oninput = function() {
-                document.getElementById('valG').innerText = this.value;
-                let a = canvas.getActiveObject();
-                if(a && a.type.includes('text')) {
-                    a.set('shadow', new fabric.Shadow({ color: a.fill, blur: parseInt(this.value), offsetX: 0, offsetY: 0 }));
-                    canvas.requestRenderAll();
-                }
-            };
-
-            // Blur Logic
-            document.getElementById('rangeB').oninput = function() {
-                document.getElementById('valB').innerText = this.value;
-                let bg = canvas.backgroundImage;
-                if(bg) {
-                    bg.filters = [new fabric.Image.filters.Blur({ blur: this.value / 15 })];
-                    bg.applyFilters();
-                    canvas.requestRenderAll();
-                }
-            };
-
-            initUI();
-            addT("नया डिज़ाइन");
-
-            document.getElementById('f').onchange = (e) => {
-                let r = new FileReader();
-                r.onload = (ev) => {
-                    fabric.Image.fromURL(ev.target.result, (img) => {
-                        img.scaleToWidth(canvas.width);
-                        canvas.setBackgroundImage(img, canvas.requestRenderAll.bind(canvas));
-                    });
-                };
-                r.readAsDataURL(e.target.files[0]);
-            };
         };
+        r.readAsDataURL(e.target.files[0]);
+    };
+};
 
-        function initUI() {
-            const fb = document.getElementById('fontBox'), tc = document.getElementById('textColBox'), bc = document.getElementById('bgColBox');
-            
-            fonts.forEach(f => {
-                let p = document.createElement('div'); p.className = 'font-pill'; p.innerText = 'अ '+f; p.style.fontFamily = f;
-                p.onclick = () => { let a = canvas.getActiveObject(); if(a) { a.set('fontFamily', f); canvas.requestRenderAll(); } };
-                fb.appendChild(p);
-            });
+/* --- Professional File Download System --- */
+function professionalDownload() {
+    canvas.discardActiveObject().renderAll();
+    
+    // 1. Image को हाई क्वालिटी में रेंडर करें
+    const dataURL = canvas.toDataURL({ format: 'png', multiplier: 3 });
 
-            colorPalette.forEach(c => {
-                // Text Color Dots
-                let d1 = document.createElement('div'); d1.className = 'color-dot'; d1.style.background = c;
-                d1.onclick = () => { let a = canvas.getActiveObject(); if(a) { a.set('fill', c); canvas.renderAll(); } };
-                tc.appendChild(d1);
+    // 2. DataURL को Blob (Binary) में बदलें - यही ब्राउज़र वाला असली सिस्टम है
+    fetch(dataURL)
+    .then(res => res.blob())
+    .then(blob => {
+        const fileUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = fileUrl;
+        link.download = 'HindiDesign_' + Date.now() + '.png';
+        
+        // 3. ब्राउज़र को पक्का डाउनलोड का ऑर्डर देना
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // मेमोरी साफ़ करें
+        setTimeout(() => URL.revokeObjectURL(fileUrl), 100);
+    });
 
-                // Background Color Dots
-                let d2 = document.createElement('div'); d2.className = 'color-dot'; d2.style.background = c;
-                d2.onclick = () => { 
-                    canvas.setBackgroundImage(null); 
-                    canvas.setBackgroundColor(c, canvas.renderAll.bind(canvas)); 
-                };
-                bc.appendChild(d2);
-            });
-        }
+    // एड शो करना
+    if(window.Android && window.Android.showInterstitial) window.Android.showInterstitial();
+}
 
-        function addT(v = "यहाँ लिखें") {
-            let t = new fabric.IText(v, {
-                left: canvas.width/2, top: canvas.height/2, originX: 'center', originY: 'center',
-                fill: '#FFD966', fontSize: 45, fontFamily: 'Mukta', fontWeight: 'bold'
-            });
-            canvas.add(t).setActiveObject(t);
-            canvas.requestRenderAll();
-        }
-
-        function del() {
-            let a = canvas.getActiveObject();
-            if(a) { canvas.remove(a); canvas.discardActiveObject(); canvas.requestRenderAll(); }
-        }
-
-        function save() {
-            const data = canvas.toDataURL({ multiplier: 3, format: 'png' });
-            const l = document.createElement('a'); l.download = 'Design.png'; l.href = data; l.click();
-            if(window.Android && window.Android.showInterstitial) window.Android.showInterstitial();
-        }
-    </script>
+function initFonts(){const sb=document.getElementById('fontBox');stylish.forEach(f=>{let b=document.createElement('button');b.className='font-pill';b.innerText='अ '+f;b.style.fontFamily=f;b.onclick=()=>{let a=canvas.getActiveObject();if(a){a.set('fontFamily',f);canvas.renderAll();}};sb.appendChild(b);});}
+function applyBlur(v){let a=canvas.getActiveObject();if(a&&a.type==='image'){a.filters=[new fabric.Image.filters.Blur({blur:v/100})];a.applyFilters();canvas.renderAll();}}
+function applyFX(v){let a=canvas.getActiveObject();if(!a)return;if(v==='glow')a.set('shadow',new fabric.Shadow({color:a.fill,blur:25}));if(v==='shadow')a.set('shadow',new fabric.Shadow({color:'rgba(0,0,0,0.8)',blur:15,offsetX:8,offsetY:8}));canvas.renderAll();}
+function updateCanvasSize(r){const p=document.getElementById('cParent');const w=p.clientWidth;if(r==='1:1')canvas.setDimensions({width:w,height:w});if(r==='16:9')canvas.setDimensions({width:w,height:w*0.56});if(r==='9:16')canvas.setDimensions({width:w,height:w*1.5});canvas.renderAll();}
+function changeBg(c){canvas.setBackgroundColor(c,canvas.renderAll.bind(canvas));}
+function changeTextColor(c){let a=canvas.getActiveObject();if(a&&a.type.includes('text')){a.set('fill',c);canvas.renderAll();}}
+function addText(v){let t=new fabric.IText(v||"यहाँ लिखें",{left:50,top:50,fill:'#FFD966',fontSize:40,fontFamily:'Mukta'});canvas.add(t).setActiveObject(t);}
+function deleteObj(){canvas.getActiveObjects().forEach(o=>canvas.remove(o));canvas.discardActiveObject().renderAll();}
+</script>
 </body>
-</html>
-
+        </html>
+        
